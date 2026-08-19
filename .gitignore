@@ -32,7 +32,8 @@ artifacts/overlays/
 artifacts/holdout_*.json
 artifacts/holdout_class4*.json
 artifacts/docker_build.log
-.wheels/
+.wheels/*
+!.wheels/.gitkeep
 *.whl
 .DS_Store
 Thumbs.db
