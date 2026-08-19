@@ -131,7 +131,10 @@ def main() -> None:
     holdout_path = cfg["data"].get("holdout_ids")
     holdout_ids = load_holdout_ids(ROOT / holdout_path if holdout_path else None)
     train_df, val_df, holdout_df = prepare_train_val_holdout(
-        index, val_frac=float(cfg["data"]["val_frac"]), seed=int(cfg["seed"]), holdout_ids=holdout_ids
+        index,
+        val_frac=float(cfg["data"]["val_frac"]),
+        seed=int(cfg["seed"]),
+        holdout_ids=holdout_ids,
     )
     log.info(
         "train_images=%s val_images=%s holdout_excluded=%s",
@@ -154,7 +157,9 @@ def main() -> None:
         if len(to_dup) > 0:
             before = len(train_df)
             train_df = pd.concat([train_df] + [to_dup] * (oversample_factor - 1), ignore_index=True)
-            train_df = train_df.sample(frac=1.0, random_state=int(cfg["seed"])).reset_index(drop=True)
+            train_df = train_df.sample(frac=1.0, random_state=int(cfg["seed"])).reset_index(
+                drop=True
+            )
             log.info(
                 "oversample: class_id=%s factor=%s: train %s -> %s",
                 oversample_class_id,

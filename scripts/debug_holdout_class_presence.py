@@ -5,16 +5,18 @@ Debug: how many holdout images have non-empty GT for each class after dataset tr
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
-
-import numpy as np
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from steel_defect.config import load_yaml  # noqa: E402
-from steel_defect.dataset import build_image_index, load_holdout_ids, SteelDefectDataset  # noqa: E402
+from steel_defect.dataset import (  # noqa: E402
+    SteelDefectDataset,
+    build_image_index,
+    load_holdout_ids,
+)
 
 
 def main() -> None:
@@ -43,4 +45,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

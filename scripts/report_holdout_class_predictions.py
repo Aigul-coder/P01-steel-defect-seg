@@ -14,7 +14,6 @@ import sys
 from pathlib import Path
 
 import cv2
-import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -51,7 +50,9 @@ def main() -> None:
 
     holdout_df = index[index["ImageId"].astype(str).isin(holdout_ids)].reset_index(drop=True)
     if len(holdout_df) != len(holdout_ids):
-        log.warning("holdout_df rows (%s) != holdout_ids size (%s)", len(holdout_df), len(holdout_ids))
+        log.warning(
+            "holdout_df rows (%s) != holdout_ids size (%s)", len(holdout_df), len(holdout_ids)
+        )
 
     class_id = int(args.class_id)
     if class_id < 1 or class_id > 4:
@@ -84,7 +85,9 @@ def main() -> None:
             }
         )
         if pos_area > 0:
-            positive.append({"image_id": str(row["ImageId"]), "positive_area_frac": pos_area, "max_prob": mx})
+            positive.append(
+                {"image_id": str(row["ImageId"]), "positive_area_frac": pos_area, "max_prob": mx}
+            )
 
     out = args.out or (ROOT / "artifacts" / "holdout_class4_report.json")
     out_payload = {
@@ -100,10 +103,11 @@ def main() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(out_payload, indent=2), encoding="utf-8")
 
-    print(f"class {class_id} @ threshold {args.threshold}: n_positive={len(positive)}/{len(holdout_df)}")
+    n_pos = len(positive)
+    n_total = len(holdout_df)
+    print(f"class {class_id} @ threshold {args.threshold}: n_positive={n_pos}/{n_total}")
     print("positive_image_ids:", ", ".join([x["image_id"] for x in positive]))
 
 
 if __name__ == "__main__":
     main()
-

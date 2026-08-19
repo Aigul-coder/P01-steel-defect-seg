@@ -14,7 +14,6 @@ import sys
 from pathlib import Path
 
 import cv2
-import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -44,7 +43,9 @@ def main() -> None:
 
     holdout_path = cfg["data"].get("holdout_ids")
     if not holdout_path:
-        raise SystemExit("cfg.data.holdout_ids is missing. Add data/holdout_ids.txt path to config.")
+        raise SystemExit(
+            "cfg.data.holdout_ids is missing. Add data/holdout_ids.txt path to config."
+        )
     holdout_ids = load_holdout_ids(ROOT / holdout_path)
     if not holdout_ids:
         raise SystemExit("Holdout ids empty. data/holdout_ids.txt is empty?")
@@ -52,7 +53,8 @@ def main() -> None:
     holdout_df = index[index["ImageId"].astype(str).isin(holdout_ids)].reset_index(drop=True)
     if len(holdout_df) != len(holdout_ids):
         raise SystemExit(
-            f"Holdout id mismatch: df has {len(holdout_df)} rows but ids set has {len(holdout_ids)}. "
+            f"Holdout id mismatch: df has {len(holdout_df)} rows "
+            f"but ids set has {len(holdout_ids)}. "
             "Check that all ids exist in train.csv/images_dir."
         )
 
@@ -74,7 +76,9 @@ def main() -> None:
             4: row["rle_4"],
         }
         # (C, H, W) with 0/1 float values.
-        gt_masks = masks_to_multichannel(rles, h, w, num_classes=int(cfg["model"].get("num_classes", 4)))
+        gt_masks = masks_to_multichannel(
+            rles, h, w, num_classes=int(cfg["model"].get("num_classes", 4))
+        )
 
         over_rgb = overlay_masks(rgb, gt_masks, threshold=args.threshold, alpha=args.alpha)
         out_path = args.out / f"{str(row['ImageId'])}.png"
@@ -96,4 +100,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

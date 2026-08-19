@@ -55,7 +55,9 @@ def main() -> None:
         raise SystemExit("No holdout images configured (data/holdout_ids.txt empty or missing).")
 
     ds = SteelDefectDataset(holdout_df, image_size=int(cfg["data"]["image_size"]), train=False)
-    loader = DataLoader(ds, batch_size=int(cfg["train"]["batch_size"]), shuffle=False, num_workers=0)
+    loader = DataLoader(
+        ds, batch_size=int(cfg["train"]["batch_size"]), shuffle=False, num_workers=0
+    )
 
     weights = Path(args.weights) if args.weights else ROOT / cfg["artifacts"]["weights"]
     model = build_model(

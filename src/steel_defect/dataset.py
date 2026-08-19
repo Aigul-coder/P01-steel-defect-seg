@@ -104,7 +104,9 @@ def load_holdout_ids(path: Path | None) -> set[str]:
     return ids
 
 
-def exclude_holdout(index: pd.DataFrame, holdout_ids: set[str]) -> tuple[pd.DataFrame, pd.DataFrame]:
+def exclude_holdout(
+    index: pd.DataFrame, holdout_ids: set[str]
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Remove holdout images from the index used for train/val splitting."""
     if not holdout_ids:
         return index.reset_index(drop=True), index.iloc[:0].copy()

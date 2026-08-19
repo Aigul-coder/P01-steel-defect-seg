@@ -83,11 +83,15 @@ def postprocess_logits_with_padding(
     c = probs.shape[0]
 
     new_h, new_w = resized_hw
-    probs_cropped = probs[:, pad_top : pad_top + new_h, pad_left : pad_left + new_w]  # (C,new_h,new_w)
+    probs_cropped = probs[
+        :, pad_top : pad_top + new_h, pad_left : pad_left + new_w
+    ]  # (C,new_h,new_w)
 
     out = np.zeros((c, orig_hw[0], orig_hw[1]), dtype=np.float32)
     for i in range(c):
-        out[i] = cv2.resize(probs_cropped[i], (orig_hw[1], orig_hw[0]), interpolation=cv2.INTER_LINEAR)
+        out[i] = cv2.resize(
+            probs_cropped[i], (orig_hw[1], orig_hw[0]), interpolation=cv2.INTER_LINEAR
+        )
     return out
 
 

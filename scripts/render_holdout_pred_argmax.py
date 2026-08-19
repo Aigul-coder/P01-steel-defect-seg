@@ -43,7 +43,7 @@ def overlay_argmax(
 
     h, w = image_rgb.shape[:2]
     if probs.shape[1:] != (h, w):
-        raise ValueError(f"probs spatial {probs.shape[1:]} != image {(h,w)}")
+        raise ValueError(f"probs spatial {probs.shape[1:]} != image {(h, w)}")
 
     argmax_c = probs.argmax(axis=0)  # (H,W)
     max_prob = probs.max(axis=0)  # (H,W)
@@ -68,7 +68,9 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=ROOT / "artifacts" / "overlays" / "argmax_holdout")
     ap.add_argument("--min-prob", type=float, default=0.3)
     ap.add_argument("--alpha", type=float, default=0.45)
-    ap.add_argument("--threshold-show", type=float, default=0.3, help="used only for logging (max prob)")
+    ap.add_argument(
+        "--threshold-show", type=float, default=0.3, help="used only for logging (max prob)"
+    )
     args = ap.parse_args()
 
     cfg = load_yaml(args.config)
@@ -79,7 +81,9 @@ def main() -> None:
     index = build_image_index(data_root / cfg["data"]["csv"], data_root / cfg["data"]["images_dir"])
     holdout_path = cfg["data"].get("holdout_ids")
     if not holdout_path:
-        raise SystemExit("cfg.data.holdout_ids is missing. Add data/holdout_ids.txt path to config.")
+        raise SystemExit(
+            "cfg.data.holdout_ids is missing. Add data/holdout_ids.txt path to config."
+        )
     holdout_ids = load_holdout_ids(ROOT / holdout_path)
     if not holdout_ids:
         raise SystemExit("Holdout ids empty. data/holdout_ids.txt is empty?")
@@ -87,7 +91,8 @@ def main() -> None:
     holdout_df = index[index["ImageId"].astype(str).isin(holdout_ids)].reset_index(drop=True)
     if len(holdout_df) != len(holdout_ids):
         raise SystemExit(
-            f"Holdout id mismatch: df has {len(holdout_df)} rows but ids set has {len(holdout_ids)}."
+            f"Holdout id mismatch: df has {len(holdout_df)} rows "
+            f"but ids set has {len(holdout_ids)}."
         )
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -135,7 +140,9 @@ def main() -> None:
                 "image_id": str(row["ImageId"]),
                 "max_prob": float(max_prob.max()),
                 "argmax_counts": [int((argmax_c == ci).sum()) for ci in range(c)],
-                "argmax_colored_counts": [int((mask_col & (argmax_c == ci)).sum()) for ci in range(c)],
+                "argmax_colored_counts": [
+                    int((mask_col & (argmax_c == ci)).sum()) for ci in range(c)
+                ],
             }
         )
 
@@ -149,7 +156,9 @@ def main() -> None:
         "alpha": args.alpha,
         "max_prob_stats": {
             "max": float(np.max([x["max_prob"] for x in per_image_log])) if per_image_log else None,
-            "mean": float(np.mean([x["max_prob"] for x in per_image_log])) if per_image_log else None,
+            "mean": float(np.mean([x["max_prob"] for x in per_image_log]))
+            if per_image_log
+            else None,
         },
         "argmax_pixel_fraction_all": None,
         "argmax_pixel_fraction_colored": None,
@@ -173,4 +182,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
