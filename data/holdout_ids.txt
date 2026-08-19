@@ -1,0 +1,21 @@
+# Visual QA holdout — excluded from train AND val (never used for checkpoint selection).
+# Images copied to data/holdout_preview/ for overlay review.
+2bdb48c91.jpg
+2ec10042f.jpg
+38b921939.jpg
+3fcd061fc.jpg
+4421ca253.jpg
+4aa9afc78.jpg
+554fd222d.jpg
+5b5543800.jpg
+69e2943d2.jpg
+8177945a9.jpg
+85294cff9.jpg
+b595566b3.jpg
+b9b07c892.jpg
+bc395145e.jpg
+ce13a3739.jpg
+e22c8bee8.jpg
+e6ac69712.jpg
+fa80cdac8.jpg
+fe56055d0.jpg

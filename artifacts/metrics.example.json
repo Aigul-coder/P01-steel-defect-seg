@@ -1,0 +1,24 @@
+{
+  "dataset": "Severstal (full train, 12568 images)",
+  "split": {
+    "seed": 42,
+    "val_frac": 0.2,
+    "holdout_n": 19,
+    "holdout_ids_file": "data/holdout_ids.txt"
+  },
+  "baseline": {
+    "config": "configs/baseline.yaml",
+    "val_best_mean_dice": 0.860,
+    "holdout_mean_dice": 0.687,
+    "holdout_mean_dice_present_only": 0.011,
+    "holdout_class3_dice_present_only": 0.046
+  },
+  "improved": {
+    "config": "configs/improved.yaml",
+    "val_best_mean_dice": 0.867,
+    "holdout_mean_dice": 0.737,
+    "holdout_mean_dice_present_only": 0.050,
+    "holdout_class3_dice_present_only": 0.201
+  },
+  "notes": "Replace with output from scripts/eval.py and scripts/eval_holdout.py. See artifacts/results_severstal.json for full report."
+}

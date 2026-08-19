@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+data/raw/
+data/subset/
+data/processed/
+artifacts/*.pt
+artifacts/*.onnx
+artifacts/*.json
+!artifacts/metrics.example.json
+.pytest_cache/
+.ruff_cache/
+.git/
+# Keep only Linux CPU wheels for image build (exclude huge Windows CUDA wheels)
+.wheels/*cu124*
+.wheels/*win_amd64*

@@ -1,0 +1,85 @@
+{
+  "dataset": "Severstal steel defect detection (Kaggle)",
+  "train_images": 12568,
+  "split": {
+    "seed": 42,
+    "val_frac": 0.2,
+    "holdout_ids": "data/holdout_ids.txt",
+    "holdout_n": 19,
+    "note": "19 blind holdout ImageIds excluded from train and val before split"
+  },
+  "models": {
+    "baseline": {
+      "config": "configs/baseline.yaml",
+      "weights_local": "artifacts/model_baseline.pt",
+      "val": {
+        "best_mean_dice": 0.8601,
+        "best_epoch": 2,
+        "per_class_dice": {
+          "1": 0.9247,
+          "2": 0.9797,
+          "3": 0.5975,
+          "4": 0.9386
+        },
+        "note": "Per-class dice on val averages over all images; classes 1/2/4 are inflated when GT is empty on most images"
+      },
+      "holdout_blind": {
+        "mean_dice": 0.6872,
+        "mean_dice_present_only": 0.0114,
+        "per_class_dice_present_only": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0456,
+          "4": 0.0
+        },
+        "per_class_n_present": {
+          "1": 7,
+          "2": 4,
+          "3": 5,
+          "4": 4
+        }
+      }
+    },
+    "improved": {
+      "config": "configs/improved.yaml",
+      "weights_local": "artifacts/model.pt",
+      "val": {
+        "best_mean_dice": 0.8669,
+        "best_epoch": 6,
+        "per_class_dice": {
+          "1": 0.9247,
+          "2": 0.9797,
+          "3": 0.6246,
+          "4": 0.9386
+        }
+      },
+      "holdout_blind": {
+        "mean_dice": 0.7369,
+        "mean_dice_present_only": 0.0504,
+        "per_class_dice_present_only": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.2014,
+          "4": 0.0
+        },
+        "per_class_n_present": {
+          "1": 7,
+          "2": 4,
+          "3": 5,
+          "4": 4
+        }
+      }
+    }
+  },
+  "hire_signal": {
+    "val_lift_mean_dice": "+0.0068 (baseline 0.860 → improved 0.867)",
+    "holdout_lift_mean_dice": "+0.0497 (baseline 0.687 → improved 0.737)",
+    "holdout_class3_present_only_lift": "+0.156 (0.046 → 0.201)",
+    "known_limitation": "Multi-class head collapse: model detects defects mainly as class 3; class 4 (yellow GT) not predicted above threshold on blind holdout"
+  },
+  "visual_qa": {
+    "demo_overlays": "docs/assets/demo/",
+    "regenerate": "See README section Visual QA (holdout)"
+  },
+  "weights_policy": "Do not commit .pt files. Train locally or attach to GitHub Release."
+}

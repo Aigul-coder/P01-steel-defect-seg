@@ -1,0 +1,44 @@
+# Baseline: UNet + Dice/BCE (no focal, uniform class weights)
+experiment_name: baseline_unet_resnet34_ce
+seed: 42
+device: cuda
+amp: true
+
+data:
+  root: data/raw
+  csv: train.csv
+  images_dir: train_images
+  image_size: 256
+  val_frac: 0.2
+  holdout_ids: data/holdout_ids.txt
+  num_workers: 2
+
+model:
+  architecture: unet
+  encoder: resnet34
+  encoder_weights: imagenet
+  num_classes: 4
+
+train:
+  mode: baseline  # baseline | improved
+  epochs: 5
+  batch_size: 8
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  class_weights: [1.0, 1.0, 1.0, 1.0]
+  focal_gamma: 2.0
+  dice_weight: 0.5
+  bce_weight: 0.5
+  log_every: 10
+
+eval:
+  threshold: 0.5
+
+export:
+  onnx_path: artifacts/model_baseline.onnx
+  opset: 17
+
+artifacts:
+  dir: artifacts
+  weights: artifacts/model_baseline.pt
+  metrics: artifacts/metrics_baseline.json
