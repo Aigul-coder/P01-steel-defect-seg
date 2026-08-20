@@ -78,8 +78,8 @@
     "known_limitation": "Multi-class head collapse: model detects defects mainly as class 3; class 4 (yellow GT) not predicted above threshold on blind holdout"
   },
   "visual_qa": {
-    "demo_overlays": "docs/assets/demo/",
-    "regenerate": "See README section Visual QA (holdout)"
+    "demo_overlays": "local only — do not publish competition imagery (Kaggle terms)",
+    "regenerate": "See README section Visual QA (blind holdout, local only)"
   },
   "weights_policy": "Do not commit .pt files. Train locally or attach to GitHub Release."
 }

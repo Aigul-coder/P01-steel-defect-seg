@@ -6,7 +6,7 @@
 |------|-----|
 | `src/`, `scripts/`, `configs/`, `tests/` | Code |
 | `docker/`, `.github/workflows/` | MLOps |
-| `docs/` incl. `docs/assets/demo/*.png` | Docs + small QA overlays (~3 MB) |
+| `docs/` (text only; no competition image overlays) | Interview + design notes |
 | `data/holdout_ids.txt` | ImageId list only (no pixels) |
 | `data/README.md` | Download instructions |
 | `artifacts/results_severstal.json` | Honest metrics summary |
@@ -19,6 +19,7 @@
 | Path | Why |
 |------|-----|
 | `data/raw/`, `data/subset/`, `data/holdout_preview/` | Severstal images (Kaggle terms) |
+| `docs/assets/demo/*.png`, any overlay with real plates | Competition imagery (Kaggle terms) |
 | `*.pt`, `*.pth`, `*.onnx` | Weights (~93 MB each) |
 | `.venv/`, `.wheels/` | Local env |
 | `.env`, `kaggle.json` | Secrets |

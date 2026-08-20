@@ -32,6 +32,9 @@ artifacts/overlays/
 artifacts/holdout_*.json
 artifacts/holdout_class4*.json
 artifacts/docker_build.log
+# Kaggle competition imagery — never commit
+docs/assets/demo/*.png
+!docs/assets/demo/.gitkeep
 .wheels/*
 !.wheels/.gitkeep
 *.whl
