@@ -1,50 +1,50 @@
-# Interview script — P01 Steel Defect Segmentation
+# Скрипт к интервью — P01 сегментация дефектов стали
 
-## 30-second pitch
+## Питч на 30 секунд
 
-I built a Severstal-style **pixel-level defect segmentation** demo: multi-label UNet, explicit **class imbalance** handling (focal + class weights), per-class Dice, FastAPI overlay, and ONNX CPU latency. Hire signal is not “I can call SMP” — it is **baseline vs improved metrics with an imbalance story**.
+Сделала демо сегментации дефектов в стиле Severstal: multi-label UNet, явная работа с **дисбалансом классов** (focal + веса), per-class Dice, FastAPI с оверлеем масок и latency ONNX на CPU. Hire signal не в том, что «умею вызвать SMP», а в сравнении **baseline vs improved** с честной историей про imbalance и holdout.
 
-## Likely questions → answers
+## Типичные вопросы → ответы
 
-### Why multi-label (4 channels) instead of softmax?
+### Почему multi-label (4 канала), а не softmax?
 
-Severstal annotations allow **multiple defect classes on one plate**. Softmax forces mutual exclusivity; independent sigmoid heads match the label schema and RLE-per-class CSV.
+В разметке Severstal на одном листе могут быть **несколько классов дефектов сразу**. Softmax заставляет классы быть взаимоисключающими; независимые sigmoid-головы соответствуют схеме разметки и CSV с RLE по каждому ClassId.
 
-### How did you handle imbalance?
+### Как боролась с дисбалансом?
 
-Most pixels are background; class 2 is typically rare. Baseline uses Dice + BCE with uniform weights. Improved uses **focal BCE (γ=2)** plus **higher pos weights on rare classes**, keeping Dice for region overlap. Report **per-class Dice**, not only mean.
+Большинство пикселей — фон; класс 2 обычно редкий. Baseline: Dice + BCE с равными весами. Improved: **focal BCE (γ=2)** и **повышенные pos weights** на редких классах, Dice оставляю за overlap регионов. Смотрю **per-class Dice**, а не только среднее.
 
-### Validation / leakage?
+### Валидация / утечки?
 
-Split by **ImageId** stratified on defect presence. **19 blind holdout** ImageIds (`data/holdout_ids.txt`) excluded from train and val. Same seed in YAML for train/eval/holdout scripts.
+Сплит по **ImageId**, стратификация по наличию дефекта. **19 blind holdout** ImageId (`data/holdout_ids.txt`) исключены и из train, и из val. Один и тот же seed в YAML для train / eval / holdout.
 
-### Why two Dice numbers?
+### Зачем два числа Dice?
 
-Default per-class Dice averages over all images; empty GT + empty pred → Dice = 1.0. Report **`per_class_dice_present_only`** from `eval_holdout.py`. Holdout: improved class 3 present-only Dice **0.20** vs baseline **0.05**.
+Обычный per-class Dice усредняет по всем картинкам: пустой GT + пустой pred → Dice = 1.0. Честнее **`per_class_dice_present_only`** из `eval_holdout.py`. На holdout: class 3 present-only у improved **0.20** против baseline **0.05**.
 
-### Why UNet-ResNet34?
+### Почему UNet-ResNet34?
 
-Strong industrial baseline: ImageNet encoder, cheap enough for 256² demos, easy ONNX export. FPN is a config switch for a one-line ablation.
+Сильный промышленный baseline: ImageNet-энкодер, достаточно лёгкий для демо 256², простой экспорт в ONNX. FPN — переключатель в конфиге для короткой абляции.
 
-### Metric choice?
+### Какую метрику показываешь?
 
-Show val table + **blind holdout present-only** table. Mean Dice alone hides class head collapse (e.g. class 4 val Dice ~0.94 but holdout class 4 recall = 0).
+Таблицу на val + таблицу **blind holdout present-only**. Один mean Dice маскирует collapse головы (например class 4 на val ~0.94 Dice, а на holdout recall class 4 = 0).
 
-### ONNX / serving?
+### ONNX / сервис?
 
-Train in PyTorch (CUDA when available). Export ONNX; serve with Torch or ORT via `INFERENCE_BACKEND`. API returns class areas + **PNG overlay** for visual QA.
+Обучение в PyTorch (CUDA, если есть). Экспорт ONNX; инференс Torch или ORT через `INFERENCE_BACKEND`. API отдаёт площади по классам + **PNG-оверлей** для визуального QA.
 
-### Failure modes?
+### Типичные сбои?
 
-- **Multi-class collapse:** detects defects as class 3; class 4 (yellow GT) not predicted on holdout  
-- Thin scratches vs mill texture → false positives  
-- Resize/pad to 256² changes thin defect geometry  
+- **Multi-class collapse:** дефекты в основном как class 3; class 4 (жёлтый GT) на holdout почти не предсказывается  
+- Тонкие царапины vs текстура проката → ложные срабатывания  
+- Resize/pad до 256² меняет геометрию тонких дефектов  
 
-### Production gap?
+### Что не дотягивает до продакшена?
 
-No mill private data, no TensorRT required, no Kaggle leaderboard farming. Next: plate-level grouping, stronger augs, calibration of thresholds per class.
+Нет приватных данных комбината, TensorRT не обязателен, нет фарма Kaggle leaderboard. Дальше: группировка на уровне листа, сильнее аугментации, калибровка порогов по классам.
 
-## Demo commands to memorize
+## Команды демо (запомнить)
 
 ```bash
 python scripts/download_data.py --source synthetic --subset 64
