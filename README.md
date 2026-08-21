@@ -19,14 +19,19 @@ Full JSON: [`artifacts/results_severstal.json`](artifacts/results_severstal.json
 
 **Metric caveat:** default per-class Dice averages over all val/holdout images; when GT for a class is empty on most images, Dice is inflated (~0.79 for classes 1/2/4). Use `per_class_dice_present_only` from `scripts/eval_holdout.py` for honest rare-class reporting.
 
-**Known limitation:** model detects defects mainly as **class 3 (blue)**; **class 4 (yellow GT)** is not predicted above threshold on blind holdout.
+**Known limitation:** model detects defects mainly as **class 3 (blue)**; **class 4 (yellow GT)** is not predicted above threshold on blind holdout — see visual QA below.
 
-## Visual QA (blind holdout, local only)
+## Visual QA (blind holdout)
 
-Kaggle competition terms forbid redistributing Severstal images. **Do not commit** raw JPGs or overlay PNGs that contain them. Generate overlays locally after download + training:
+Example overlays (baseline / improved / GT):
+
+| ImageId | Baseline | Improved | GT |
+|---------|----------|----------|-----|
+| `4aa9afc78.jpg` | ![baseline](docs/assets/demo/4aa9afc78_baseline.png) | ![improved](docs/assets/demo/4aa9afc78_improved.png) | ![gt](docs/assets/demo/4aa9afc78_gt.png) |
+| `fe56055d0.jpg` | ![baseline](docs/assets/demo/fe56055d0_baseline.png) | ![improved](docs/assets/demo/fe56055d0_improved.png) | ![gt](docs/assets/demo/fe56055d0_gt.png) |
 
 ```powershell
-# Predictions (after training, weights in artifacts/)
+# Regenerate locally after training
 foreach ($id in "4aa9afc78","fe56055d0") {
   python -m steel_defect.cli "data/holdout_preview/$id.jpg" --weights artifacts/model_baseline.pt --out "artifacts/overlays/baseline/$id.png"
   python -m steel_defect.cli "data/holdout_preview/$id.jpg" --weights artifacts/model.pt --out "artifacts/overlays/improved/$id.png"
@@ -90,8 +95,8 @@ Optional experiment: `configs/improved_class4_focus.yaml` (higher weight + overs
 
 See [`docs/github-publish.md`](docs/github-publish.md).
 
-**Commit:** code, configs, docs, `artifacts/results_severstal.json`.  
-**Do not commit:** `data/raw/`, `data/holdout_preview/`, `*.pt`, overlay PNGs with competition images.  
+**Commit:** code, configs, docs, `artifacts/results_severstal.json`, small QA overlays in `docs/assets/demo/`.  
+**Do not commit:** full `data/raw/`, `data/holdout_preview/`, `*.pt`.  
 **Weights:** attach `model_baseline.pt` + `model.pt` to a GitHub Release (~93 MB each) or train locally.
 
 ## Project layout
