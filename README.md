@@ -105,7 +105,7 @@ See [`docs/github-publish.md`](docs/github-publish.md).
 src/steel_defect/   # RLE, dataset, losses, models, API
 scripts/            # download, train, eval, eval_holdout, export_onnx
 configs/            # baseline.yaml, improved.yaml
-docs/               # interview.md, design-decisions.md, github-publish.md
+docs/               # design-decisions.md, github-publish.md (interview.md local only)
 docker/
 tests/
 ```

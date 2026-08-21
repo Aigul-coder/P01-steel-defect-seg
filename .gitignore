@@ -49,3 +49,7 @@ wandb/
 ~$*
 impoved*.png
 model_baseline.png
+
+# Interview prep — keep local, do not publish
+docs/interview.md
+
